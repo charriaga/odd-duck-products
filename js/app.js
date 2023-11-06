@@ -5,7 +5,7 @@ let workingProducts = [];
 const rightPic = document.querySelector('section img:first-child');
 const middlePic = document.querySelector('section img:nth-child(2)');
 const leftPic = document.querySelector('section img:nth-child(3)');
-let rounds = null;
+let rounds = 25;
 
 function Product(productName, src, alt) {
     this.productName = productName;
@@ -37,58 +37,60 @@ const wineGlass = new Product('wine glass', '/img/wine-glass.jpg', 'egg shaped w
 
 allProducts = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
 
-    if (workingProducts.length === 0) {
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+workingProducts = allProducts.slice();
+
+let rightPicInstance = workingProducts.pop();
+let middlePicInstance = workingProducts.pop();
+let leftPicInstance = workingProducts.pop();
+
+
+
+function rightClick() {
+    leftPicInstance.clicks += 1;
+
+    rightPicInstance = workingProducts.pop();
+    middlePicInstance = workingProducts.pop();
+    leftPicInstance = workingProducts.pop();
+    renderImg();
+    if (workingProducts.length <= 1) {
         workingProducts = allProducts.slice();
         shuffleArray(workingProducts);
     }
-
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-    }
-
-    let rightPicInstance = workingProducts.pop();
-    let middlePicInstance = workingProducts.pop();
-    let leftPicInstance = workingProducts.pop();
-
-
-
-    function rightClick() {
-        leftPicInstance.clicks += 1;
-
-        rightPicInstance = workingProducts.pop();
-        middlePicInstance = workingProducts.pop();
-        leftPicInstance = workingProducts.pop();
-        renderImg();
-    }
-
-    function middleClick() {
-        middlePicInstance.clicks += 1;
-
-        rightPicInstance = workingProducts.pop();
-        middlePicInstance = workingProducts.pop();
-        leftPicInstance = workingProducts.pop();
-        renderImg();
-    }
-
-    function leftClick() {
-        leftPicInstance += 1;
-
-        rightPicInstance = workingProducts.pop();
-        middlePicInstance = workingProducts.pop();
-        leftPicInstance = workingProducts.pop();
-        renderImg();
-    }
-
-for (rounds=25; rounds > 0; rounds--) {
-    rightPic.addEventListener('click', rightClick);
-    middlePic.addEventListener('click', middleClick);
-    leftPic.addEventListener('click', leftClick);
-    console.log(rounds);
 }
 
+function middleClick() {
+    middlePicInstance.clicks += 1;
+
+    rightPicInstance = workingProducts.pop();
+    middlePicInstance = workingProducts.pop();
+    leftPicInstance = workingProducts.pop();
+    renderImg();
+    if (workingProducts.length <= 1) {
+        workingProducts = allProducts.slice();
+        shuffleArray(workingProducts);
+    }
+}
+
+function leftClick() {
+    leftPicInstance += 1;
+
+    rightPicInstance = workingProducts.pop();
+    middlePicInstance = workingProducts.pop();
+    leftPicInstance = workingProducts.pop();
+    renderImg();
+    if (workingProducts.length <= 1) {
+        workingProducts = allProducts.slice();
+        shuffleArray(workingProducts);
+    }
+}
 
 function renderImg() {
 
@@ -105,3 +107,9 @@ function renderImg() {
 }
 
 renderImg();
+
+for (rounds=25; rounds>0; rounds--) {
+    rightPic.addEventListener('click', rightClick);
+    middlePic.addEventListener('click', middleClick);
+    leftPic.addEventListener('click', leftClick);
+}

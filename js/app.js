@@ -5,7 +5,7 @@ let workingProducts = [];
 const rightPic = document.querySelector('section img:first-child');
 const middlePic = document.querySelector('section img:nth-child(2)');
 const leftPic = document.querySelector('section img:nth-child(3)');
-const button = document.querySelector('button');
+const div = document.querySelector('div');
 let maxClicks = 25;
 let clickCounter = 0;
 
@@ -114,12 +114,17 @@ function renderImg() {
     rightPic.addEventListener('click', rightClick);
     middlePic.addEventListener('click', middleClick);
     leftPic.addEventListener('click', leftClick);
-    button.addEventListener('click', buttonClick)
 
-    if (clickCounter === maxClicks) {
+
+    if (clickCounter == maxClicks) {
         rightPic.removeEventListener('click', rightClick);
         middlePic.removeEventListener('click', middleClick);
         leftPic.removeEventListener('click', leftClick);
+
+        const button = document.createElement('button');
+        div.appendChild(button);
+        button.textContent = 'View Results';
+        button.addEventListener('click', buttonClick);
     }
 }
 
@@ -128,10 +133,9 @@ function buttonClick () {
         let product = allProducts[i];
         console.log(product);
         let results = document.createElement('p');
+        div.appendChild(results);
         results.textContent = product.productName + ' had ' + product.views + ' views and ' + product.clicks + ' clicks.'
     }
 }
 
 renderImg();
-
-console.log();

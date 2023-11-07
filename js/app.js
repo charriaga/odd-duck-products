@@ -5,7 +5,9 @@ let workingProducts = [];
 const rightPic = document.querySelector('section img:first-child');
 const middlePic = document.querySelector('section img:nth-child(2)');
 const leftPic = document.querySelector('section img:nth-child(3)');
-let rounds = 25;
+const button = document.querySelector('button');
+let maxClicks = 25;
+let clickCounter = 0;
 
 function Product(productName, src, alt) {
     this.productName = productName;
@@ -55,6 +57,7 @@ let leftPicInstance = workingProducts.pop();
 
 function rightClick() {
     leftPicInstance.clicks += 1;
+    clickCounter +=1;
 
     rightPicInstance = workingProducts.pop();
     middlePicInstance = workingProducts.pop();
@@ -68,6 +71,8 @@ function rightClick() {
 
 function middleClick() {
     middlePicInstance.clicks += 1;
+    clickCounter +=1;
+
 
     rightPicInstance = workingProducts.pop();
     middlePicInstance = workingProducts.pop();
@@ -81,6 +86,7 @@ function middleClick() {
 
 function leftClick() {
     leftPicInstance += 1;
+    clickCounter +=1;
 
     rightPicInstance = workingProducts.pop();
     middlePicInstance = workingProducts.pop();
@@ -104,12 +110,28 @@ function renderImg() {
     leftPic.setAttribute('src', leftPicInstance.src);
     leftPic.setAttribute('alt', leftPicInstance.alt);
     leftPicInstance.views += 1;
+
+    rightPic.addEventListener('click', rightClick);
+    middlePic.addEventListener('click', middleClick);
+    leftPic.addEventListener('click', leftClick);
+    button.addEventListener('click', buttonClick)
+
+    if (clickCounter === maxClicks) {
+        rightPic.removeEventListener('click', rightClick);
+        middlePic.removeEventListener('click', middleClick);
+        leftPic.removeEventListener('click', leftClick);
+    }
+}
+
+function buttonClick () {
+    for (let i = 0; i<allProducts.length; i++) {
+        let product = allProducts[i];
+        console.log(product);
+        let results = document.createElement('p');
+        results.textContent = product.productName + ' had ' + product.views + ' views and ' + product.clicks + ' clicks.'
+    }
 }
 
 renderImg();
 
-for (rounds=25; rounds>0; rounds--) {
-    rightPic.addEventListener('click', rightClick);
-    middlePic.addEventListener('click', middleClick);
-    leftPic.addEventListener('click', leftClick);
-}
+console.log();

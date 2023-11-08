@@ -1,13 +1,14 @@
 'use strict';
 
-let allProducts = [];
-let workingProducts = [];
 const rightPic = document.querySelector('section img:first-child');
 const middlePic = document.querySelector('section img:nth-child(2)');
 const leftPic = document.querySelector('section img:nth-child(3)');
 const div = document.querySelector('div');
 let maxClicks = 25;
 let clickCounter = 0;
+let productNames = [];
+let productClicks = [];
+let productViews = [];
 
 function Product(productName, src, alt) {
     this.productName = productName;
@@ -16,7 +17,8 @@ function Product(productName, src, alt) {
     this.views = 0;
     this.clicks = 0;
 }
-
+Product.allProducts = [];
+Product.workingProducts = [];
 
 
 const bag = new Product('bag', 'img/bag.jpg', 'r2d2 suitcase');
@@ -39,7 +41,7 @@ const unicorn = new Product('unicorn', 'img/unicorn.jpg', 'canned unicorn meat')
 const waterCan = new Product('water can', 'img/water-can.jpg', 'watering can that shoots water back into itself');
 const wineGlass = new Product('wine glass', 'img/wine-glass.jpg', 'egg shaped wine glass with one narrow opening');
 
-allProducts = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
+Product.allProducts = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
 
 // Fisher Yates function
 function shuffleArray(array) {
@@ -49,54 +51,54 @@ function shuffleArray(array) {
     }
 }
 
-workingProducts = allProducts.slice();
+Product.workingProducts = Product.allProducts.slice();
 
-let rightPicInstance = workingProducts.pop();
-let middlePicInstance = workingProducts.pop();
-let leftPicInstance = workingProducts.pop();
+let rightPicInstance = Product.workingProducts.pop();
+let middlePicInstance = Product.workingProducts.pop();
+let leftPicInstance = Product.workingProducts.pop();
 
 
 
 function rightClick() {
     leftPicInstance.clicks += 1;
-    clickCounter +=1;
+    clickCounter += 1;
 
-    rightPicInstance = workingProducts.pop();
-    middlePicInstance = workingProducts.pop();
-    leftPicInstance = workingProducts.pop();
+    rightPicInstance = Product.workingProducts.pop();
+    middlePicInstance = Product.workingProducts.pop();
+    leftPicInstance = Product.workingProducts.pop();
     renderImg();
-    if (workingProducts.length <= 1) {
-        workingProducts = allProducts.slice();
-        shuffleArray(workingProducts);
+    if (Product.workingProducts.length <= 1) {
+        Product.workingProducts = Product.allProducts.slice();
+        shuffleArray(Product.workingProducts);
     }
 }
 
 function middleClick() {
     middlePicInstance.clicks += 1;
-    clickCounter +=1;
+    clickCounter += 1;
 
 
-    rightPicInstance = workingProducts.pop();
-    middlePicInstance = workingProducts.pop();
-    leftPicInstance = workingProducts.pop();
+    rightPicInstance = Product.workingProducts.pop();
+    middlePicInstance = Product.workingProducts.pop();
+    leftPicInstance = Product.workingProducts.pop();
     renderImg();
-    if (workingProducts.length <= 1) {
-        workingProducts = allProducts.slice();
-        shuffleArray(workingProducts);
+    if (Product.workingProducts.length <= 1) {
+        Product.workingProducts = Product.allProducts.slice();
+        shuffleArray(Product.workingProducts);
     }
 }
 
 function leftClick() {
     leftPicInstance += 1;
-    clickCounter +=1;
+    clickCounter += 1;
 
-    rightPicInstance = workingProducts.pop();
-    middlePicInstance = workingProducts.pop();
-    leftPicInstance = workingProducts.pop();
+    rightPicInstance = Product.workingProducts.pop();
+    middlePicInstance = Product.workingProducts.pop();
+    leftPicInstance = Product.workingProducts.pop();
     renderImg();
-    if (workingProducts.length <= 1) {
-        workingProducts = allProducts.slice();
-        shuffleArray(workingProducts);
+    if (Product.workingProducts.length <= 1) {
+        Product.workingProducts = Product.allProducts.slice();
+        shuffleArray(Product.workingProducts);
     }
 }
 
@@ -130,13 +132,48 @@ function renderImg() {
     }
 }
 
-function buttonClick () {
-    for (let i = 0; i<allProducts.length; i++) {
-        let product = allProducts[i];
-        console.log(product);
-        let results = document.createElement('p');
-        div.appendChild(results);
-        results.textContent = product.productName + ' had ' + product.views + ' views and ' + product.clicks + ' clicks.'
+function buttonClick() {
+    for (let i = 0; i < Product.allProducts.length; i++) {
+        
+        for (let i = 0; i < Product.allProducts.length; i++) {
+            productNames.push(Product.allProducts[i].productName);
+            productClicks.push(Product.allProducts[i].clicks);
+            productViews.push(Product.allProducts[i].views);
+        }
+
+        const data = {
+            labels: productNames,
+            datasets: [{
+                label: 'clicks',
+                data: productClicks,
+                backgroundColor: ['rgba(255, 100, 169, 0.4)'],
+                borderColor: ['rgba(255, 100, 169)'],
+                borderWidth: 1
+            },
+            {
+                label: 'views',
+                data: productViews,
+                backgroundColor: ['rgba(200, 100, 255, 0.4'],
+                borderColor: ['rgba(200, 100, 255'],
+                borderWidth: 1
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+
+        let chart = document.getElementById('myChart');
+        const myChart = new Chart(chart, config);
     }
 }
 
